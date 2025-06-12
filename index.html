@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>punishment wheel</title>
+  <title>Discord Punishment Wheel ✨</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@600&display=swap');
     body {
@@ -115,7 +115,7 @@
       z-index: 5;
     }
 
-    /* Popup modal styling */
+    /* Modal popup styling */
     #modalOverlay {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
@@ -136,7 +136,7 @@
       background: #2c2f33;
       border-radius: 15px;
       padding: 30px 40px;
-      max-width: 350px;
+      max-width: 400px;
       box-shadow:
         0 0 15px #faa61a,
         0 0 30px #ffcb52;
@@ -149,6 +149,7 @@
       opacity: 0;
       transition: transform 0.3s ease, opacity 0.3s ease;
       position: relative;
+      white-space: pre-line;
     }
     #modalOverlay.active #modal {
       transform: scale(1);
@@ -172,13 +173,13 @@
   </style>
 </head>
 <body>
-  <h1>seth's wheel of fate</h1>
+  <h1>Discord Punishment Wheel 🎡</h1>
   <div id="wheel">
     <canvas id="wheelCanvas" width="420" height="420"></canvas>
     <div id="particles"></div>
     <div id="pointer"></div>
   </div>
-  <button id="spinBtn">pray to rngesus</button>
+  <button id="spinBtn">Spin the Wheel!</button>
 
   <!-- Modal Popup -->
   <div id="modalOverlay">
@@ -189,21 +190,33 @@
   </div>
 
   <script>
+    // Punishments and corresponding icons (Discord style emojis or Unicode)
     const punishments = [
-      "only type in lowercase for 5 minutes",
-      "u must type everything in ALL CAPS",
-      "no emojis allowed for 10 minutes",
-      "speak only in questions for 5 minutes",
-      "use only one-word messages for 10 minutes",
-      "no typing except 'yes' or 'no' for 5 minutes",
-      "type with extra spaces between letters",
-      "reply only with GIFs for 5 minutes"
+      {icon: "🔡", text: "Only type in lowercase for 5 minutes"},
+      {icon: "🔠", text: "You must type everything in ALL CAPS"},
+      {icon: "🚫😀", text: "No emojis allowed for 10 minutes"},
+      {icon: "❓", text: "Speak only in questions for 5 minutes"},
+      {icon: "🗣️", text: "Use only one-word messages for 10 minutes"},
+      {icon: "👍👎", text: "No typing except 'yes' or 'no' for 5 minutes"},
+      {icon: "💬", text: "Type with extra spaces between letters"},
+      {icon: "🎞️", text: "Reply only with GIFs for 5 minutes"},
+      {icon: "⌛", text: "No typing for 1 minute (silence challenge)"},
+      {icon: "🤐", text: "Only react with emojis for 5 minutes"},
+      {icon: "🔄", text: "Repeat last message twice every time"},
+      {icon: "💢", text: "Use at least 3 exclamation marks per message"},
+      {icon: "🧙‍♂️", text: "Talk only in rhymes for 5 minutes"},
+      {icon: "🤖", text: "Use only robot-style messages (monotone)"},
+      {icon: "👻", text: "Send only spooky messages for 10 minutes"},
+      {icon: "🎵", text: "Write messages like song lyrics"},
+      {icon: "🚶‍♂️", text: "Take 10-second breaks between messages"},
+      {icon: "🕵️‍♀️", text: "Guess what others mean in replies"},
+      {icon: "🧩", text: "Send messages as riddles or puzzles"},
+      {icon: "📢", text: "Make your messages very loud (use CAPS)"},
     ];
 
     const canvas = document.getElementById('wheelCanvas');
     const ctx = canvas.getContext('2d');
     const spinBtn = document.getElementById('spinBtn');
-    const particlesContainer = document.getElementById('particles');
     const modalOverlay = document.getElementById('modalOverlay');
     const modal = document.getElementById('modal');
     const modalText = document.getElementById('modalText');
@@ -218,7 +231,6 @@
     let currentAngle = 0;
     let spinning = false;
 
-    // Draw the wheel with text perfectly centered and curved inside each segment
     function drawWheel(angle) {
       ctx.clearRect(0, 0, size, size);
 
@@ -243,88 +255,25 @@
         ctx.fill();
         ctx.stroke();
 
-        // Draw curved text centered along the middle of the segment arc
-        drawCurvedText(punishments[i], startAngle, segmentAngle);
-      }
-    }
-
-    // Draw curved text along arc centered in segment
-    function drawCurvedText(text, startAngle, arcAngle) {
-      const textRadius = radius - 40;
-      const anglePerChar = 12 * Math.PI / 180; // ~12 degrees per char
-      const textLengthAngle = text.length * anglePerChar;
-
-      const baseAngle = startAngle + arcAngle / 2 - textLengthAngle / 2;
-
-      ctx.save();
-      ctx.translate(center, center);
-      ctx.fillStyle = '#FFFFFFDD';
-      ctx.font = 'bold 14px Montserrat, Arial, sans-serif';
-      ctx.textBaseline = 'middle';
-
-      for (let i = 0; i < text.length; i++) {
-        const char = text[i];
-        const charAngle = baseAngle + i * anglePerChar;
+        // Draw the icon centered in the middle of the segment
+        const iconAngle = startAngle + segmentAngle / 2;
+        const iconRadius = radius - 70;
 
         ctx.save();
-        ctx.rotate(charAngle);
-        ctx.fillText(char, textRadius, 0);
+        ctx.translate(center + iconRadius * Math.cos(iconAngle), center + iconRadius * Math.sin(iconAngle));
+        ctx.rotate(iconAngle + Math.PI / 2); // rotate so icons stay upright-ish
+        ctx.fillStyle = "#fff";
+        ctx.font = 'bold 36px "Segoe UI Emoji", "Noto Color Emoji", Arial, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(punishments[i].icon, 0, 0);
         ctx.restore();
       }
-      ctx.restore();
     }
 
     drawWheel(currentAngle);
 
-    // Particle sparkle effect variables
-    const particlesCount = 30;
-    let particles = [];
-
-    function createParticle() {
-      return {
-        x: center + (Math.random() - 0.5) * radius * 1.6,
-        y: center + (Math.random() - 0.5) * radius * 1.6,
-        size: Math.random() * 2 + 1,
-        alpha: 0,
-        alphaSpeed: 0.01 + Math.random() * 0.03,
-        fadeIn: true
-      };
-    }
-
-    function initParticles() {
-      particles = [];
-      for(let i = 0; i < particlesCount; i++) {
-        particles.push(createParticle());
-      }
-    }
-
-    function drawParticles() {
-      particles.forEach(p => {
-        if(p.fadeIn) {
-          p.alpha += p.alphaSpeed;
-          if(p.alpha >= 1) p.fadeIn = false;
-        } else {
-          p.alpha -= p.alphaSpeed;
-          if(p.alpha <= 0) {
-            Object.assign(p, createParticle());
-            p.alpha = 0;
-            p.fadeIn = true;
-          }
-        }
-
-        ctx.beginPath();
-        ctx.fillStyle = `rgba(255, 255, 255, ${p.alpha})`;
-        ctx.shadowColor = 'rgba(255, 255, 255, 0.7)';
-        ctx.shadowBlur = 10;
-        ctx.arc(p.x, p.y, p.size, 0, 2 * Math.PI);
-        ctx.fill();
-        ctx.shadowBlur = 0;
-      });
-    }
-
-    initParticles();
-
-    // Super smooth cubic bezier easing (easeOutQuart)
+    // Smooth easing function
     function easeOutQuart(t) {
       return 1 - Math.pow(1 - t, 4);
     }
@@ -335,44 +284,41 @@
       spinBtn.disabled = true;
       hideModal();
 
-      const spins = 6 + Math.random() * 3; // 6 to 9 full rotations
+      const spins = 6 + Math.random() * 3; // 6 to 9 rotations
       const randomIndex = Math.floor(Math.random() * numSegments);
-      // Calculate target angle so pointer lands on chosen punishment (pointer at top = 3π/2)
-      const stopAngle = (2 * Math.PI * spins) + (3 * Math.PI / 2) - (randomIndex * segmentAngle + segmentAngle/2);
+      // Pointer points straight up at 3π/2 radians, so we rotate accordingly
+      const stopAngle = (2 * Math.PI * spins) + (3 * Math.PI / 2) - (randomIndex * segmentAngle + segmentAngle / 2);
 
-      const duration = 6500; // spin duration in ms
+      const duration = 6500; // ms
       const startTime = performance.now();
 
       function animate(now) {
         const elapsed = now - startTime;
         const t = Math.min(elapsed / duration, 1);
-        // eased progress
         const easedT = easeOutQuart(t);
         currentAngle = stopAngle * easedT;
 
         drawWheel(currentAngle);
-        drawParticles();
 
         if(t < 1) {
           requestAnimationFrame(animate);
         } else {
-          // Show the modal with result
-          showModal(punishments[randomIndex]);
+          showModal(punishments[randomIndex].text);
           spinning = false;
           spinBtn.disabled = false;
         }
       }
+
       requestAnimationFrame(animate);
     }
 
     spinBtn.addEventListener('click', spin);
 
-    // Modal handlers
+    // Modal controls
     function showModal(text) {
-      modalText.textContent = "punishment\n" + text;
+      modalText.textContent = text;
       modalOverlay.classList.add('active');
     }
-
     function hideModal() {
       modalOverlay.classList.remove('active');
     }
@@ -381,7 +327,6 @@
     modalOverlay.addEventListener('click', e => {
       if(e.target === modalOverlay) hideModal();
     });
-
   </script>
 </body>
 </html>
