@@ -167,14 +167,14 @@
   </style>
 </head>
 <body>
-  <h1>UNDERTALE PUNISHMENT WHEEL</h1>
+  <h1>SETH'S PUNISHMENT WHEEL</h1>
 
   <div id="wheel">
     <canvas id="wheelCanvas" width="420" height="420"></canvas>
     <div id="pointer"></div>
   </div>
 
-  <button id="spinBtn">SPIN THE WHEEL</button>
+  <button id="spinBtn">PRAY TO RNGESUS</button>
 
   <div id="modalOverlay">
     <div id="modal">
@@ -184,7 +184,7 @@
   </div>
 
   <!-- Audio: 8-bit style beep and chime -->
-  <audio id="tickSound" src="SND_TXT1.wav" preload="auto"></audio>
+  <audio id="tickSound" src="SND_TXT1.wav"></audio>
   <audio id="dingSound" src="mus_sfx_eyeflash.wav" preload="auto"></audio>
 
   <script>
@@ -302,7 +302,7 @@
         const currentSegment = Math.floor(pointerAngle / segmentAngle);
 
         if(currentSegment !== lastTickSegment && t < 0.99) {
-          tickSound.currentTime = 0;
+          tickSound.currentTime = 0.1;
           tickSound.play();
           lastTickSegment = currentSegment;
         }
