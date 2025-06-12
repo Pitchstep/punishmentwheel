@@ -184,10 +184,15 @@
   </div>
 
   <!-- Audio: 8-bit style beep and chime -->
-  <audio id="tickSound" src="SND_TXT1.wav"></audio>
+  <audio id="tickSound" src="SND_TXT1.wav" preload="auto"></audio>
   <audio id="dingSound" src="mus_sfx_eyeflash.wav" preload="auto"></audio>
 
   <script>
+    function playSoundCloned(audioElement) {
+  const sound = audioElement.cloneNode();
+  sound.volume = 0.3; // Optional: adjust volume so overlapping isn’t too loud
+  sound.play();
+}
     const punishments = [
       {icon: "🔡", text: "Only type in lowercase for 5 minutes"},
       {icon: "🔠", text: "You must type everything in ALL CAPS"},
@@ -302,8 +307,8 @@
         const currentSegment = Math.floor(pointerAngle / segmentAngle);
 
         if(currentSegment !== lastTickSegment && t < 0.99) {
-          tickSound.currentTime = 0.1;
-          tickSound.play();
+          playSoundCloned(tickSound);
+
           lastTickSegment = currentSegment;
         }
 
