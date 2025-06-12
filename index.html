@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SETH'S PUNISHMENT WHEEL</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 50px;
+      background: #f0f8ff;
+    }
+    button {
+      font-size: 1.5rem;
+      padding: 15px 30px;
+      cursor: pointer;
+      border: none;
+      border-radius: 8px;
+      background: #4CAF50;
+      color: white;
+      transition: background 0.3s;
+    }
+    button:hover {
+      background: #45a049;
+    }
+    #result {
+      margin-top: 40px;
+      font-size: 1.8rem;
+      color: #333;
+      min-height: 50px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Seth's Punishment Wheel</h1>
+  <button id="rollBtn">Spin the wheel</button>
+
+  <div id="result"></div>
+
+  <script>
+    const texts = [
+      "You rolled a lucky 7!",
+      "Keep going, fortune awaits!",
+      "Wow, jackpot time!",
+      "Try again, better luck next time!",
+      "You got a magic roll!",
+      "Amazing! You're on fire!",
+      "Oops, no luck this time!",
+      "Great roll, keep it up!"
+    ];
+
+    const button = document.getElementById('rollBtn');
+    const resultDiv = document.getElementById('result');
+
+    button.addEventListener('click', () => {
+      // Pick a random text
+      const randomIndex = Math.floor(Math.random() * texts.length);
+      const randomText = texts[randomIndex];
+
+      // Display it
+      resultDiv.textContent = randomText;
+    });
+  </script>
+
+</body>
+</html>
