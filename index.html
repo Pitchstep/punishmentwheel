@@ -1,327 +1,172 @@
 <!DOCTYPE html>
-<html lang="en" >
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>wheel of fate</title>
-  <!-- Pixel font from Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
-  <style>
-    /* Reset */
-    * {
-      box-sizing: border-box;
-    }
-    body {
-      margin: 0;
-      background: black;
-      color: white;
-      font-family: 'Press Start 2P', cursive, monospace;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      user-select: none;
-      text-shadow:
-        0 0 2px #00bfff,
-        0 0 4px #00bfff;
-    }
-    h1 {
-      margin-bottom: 25px;
-      font-size: 16px;
-      letter-spacing: 2px;
-      color: white;
-      text-shadow:
-        0 0 3px #fff,
-        0 0 6px #0ff,
-        0 0 9px #0ff;
-    }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>SolRNG-style Punishment Selector</title>
+<style>
+  body {
+    background: #121213;
+    color: #eee;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
+  }
 
-    #wheel {
-      position: relative;
-      width: 420px;
-      height: 420px;
-      background: #222;
-      border: 5px solid white;
-      image-rendering: pixelated;
-      filter: drop-shadow(0 0 3px cyan);
-      box-shadow:
-        inset 0 0 6px #0ff,
-        0 0 10px #0ff;
-      border-radius: 0; /* sharp edges */
-    }
+  .reel-container {
+    position: relative;
+    width: 300px;
+    height: 80px;
+    overflow: hidden;
+    border: 4px solid #7289da; /* Discord blurple */
+    border-radius: 12px;
+    background: #2c2f33;
+    box-shadow: 0 0 15px #7289da99;
+  }
 
-    #wheelCanvas {
-      width: 420px;
-      height: 420px;
-      image-rendering: pixelated;
-      border: 4px solid white;
-      background: black;
-      display: block;
-      margin: 0;
-    }
+  .reel {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    will-change: transform;
+  }
 
-    #pointer {
-      position: absolute;
-      top: -25px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 0; 
-      height: 0; 
-      border-left: 20px solid transparent;
-      border-right: 20px solid transparent;
-      border-bottom: 30px solid #0ff;
-      filter: drop-shadow(0 0 6px cyan);
-      animation: flicker 1.5s infinite;
-      z-index: 10;
-    }
-    @keyframes flicker {
-      0%, 100% {opacity: 1;}
-      50% {opacity: 0.7;}
-    }
+  .item {
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    font-weight: bold;
+    color: #eee;
+    user-select: none;
+    border-bottom: 1px solid #444;
+  }
 
-    #spinBtn {
-      margin-top: 30px;
-      padding: 15px 50px;
-      font-size: 10px;
-      border: 3px solid #0ff;
-      background: black;
-      color: #0ff;
-      cursor: pointer;
-      font-weight: bold;
-      letter-spacing: 1px;
-      text-shadow:
-        0 0 3px cyan,
-        0 0 6px cyan;
-      transition: background 0.3s, color 0.3s;
-      image-rendering: pixelated;
-    }
-    #spinBtn:hover:not(:disabled) {
-      background: #0ff;
-      color: black;
-      text-shadow:
-        none;
-    }
-    #spinBtn:disabled {
-      border-color: #555;
-      color: #555;
-      cursor: not-allowed;
-      text-shadow: none;
-    }
+  button {
+    margin-top: 20px;
+    padding: 12px 24px;
+    font-size: 1.2rem;
+    border: none;
+    border-radius: 8px;
+    background: #7289da;
+    color: #fff;
+    cursor: pointer;
+    box-shadow: 0 0 10px #7289dacc;
+    transition: background 0.3s;
+  }
 
-    /* Modal styled like Undertale dialog box */
-    #modalOverlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.8);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.3s ease;
-      z-index: 999;
-    }
-    #modalOverlay.active {
-      opacity: 1;
-      pointer-events: auto;
-    }
+  button:hover {
+    background: #5b6eae;
+  }
 
-    #modal {
-      background: black;
-      border: 4px solid white;
-      box-shadow:
-        0 0 8px cyan,
-        inset 0 0 15px #0ff;
-      max-width: 360px;
-      padding: 20px 20px 40px 20px;
-      font-size: 8px;
-      line-height: 1.3;
-      letter-spacing: 0.7px;
-      color: #0ff;
-      font-weight: 700;
-      text-align: center;
-      white-space: pre-wrap;
-      position: relative;
-      user-select: text;
-      image-rendering: pixelated;
-    }
+  .popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    background: #23272a;
+    border-radius: 16px;
+    padding: 24px 40px;
+    box-shadow: 0 0 30px #7289dacc;
+    color: #eee;
+    font-size: 1.4rem;
+    font-weight: 700;
+    text-align: center;
+    pointer-events: none;
+    transition: transform 0.3s ease;
+    user-select: none;
+    z-index: 100;
+  }
 
-    #modalClose {
-      position: absolute;
-      top: 6px;
-      right: 8px;
-      font-size: 14px;
-      font-weight: 900;
-      color: #0ff;
-      cursor: pointer;
-      user-select: none;
-      text-shadow:
-        0 0 3px cyan,
-        0 0 6px cyan;
-      transition: color 0.3s;
-    }
-    #modalClose:hover {
-      color: #00ffff;
-    }
-  </style>
+  .popup.show {
+    transform: translate(-50%, -50%) scale(1);
+    pointer-events: auto;
+  }
+
+  .popup button {
+    margin-top: 16px;
+    padding: 8px 16px;
+    font-size: 1rem;
+    background: #7289da;
+  }
+</style>
 </head>
 <body>
-  <h1>seth's wheel of fate</h1>
 
-  <div id="wheel">
-    <canvas id="wheelCanvas" width="420" height="420"></canvas>
-    <div id="pointer"></div>
+<div class="reel-container">
+  <div class="reel" id="reel">
+    <div class="item">🐾 Use only 1337 language for 15 minutes</div>
   </div>
+</div>
+<button id="spinBtn">Spin</button>
 
-  <button id="spinBtn">pray to rngesus</button>
+<div class="popup" id="popup">
+  <div id="punishmentText"></div>
+  <button id="closePopup">Close</button>
+</div>
 
-  <div id="modalOverlay">
-    <div id="modal">
-      <div id="modalClose">&times;</div>
-      <div id="modalText"></div>
-    </div>
-  </div>
+<script>
+  const reel = document.getElementById('reel');
+  const spinBtn = document.getElementById('spinBtn');
+  const popup = document.getElementById('popup');
+  const punishmentText = document.getElementById('punishmentText');
+  const closePopup = document.getElementById('closePopup');
 
-  <!-- Audio: 8-bit style beep and chime -->
-  <audio id="tickSound" src="SND_TXT1.wav" preload="auto"></audio>
-  <audio id="dingSound" src="mus_sfx_eyeflash.wav" preload="auto"></audio>
+  const itemHeight = 80; // height in px of each item
+  const totalItems = 1; // number of punishments (only 1 now)
+  
+  // We’ll simulate spinning by looping the single item multiple times
+  // so the reel scrolls down several loops before stopping
 
-  <script>
-    function playSoundCloned(audioElement) {
-  const sound = audioElement.cloneNode();
-  sound.volume = 0.3; // Optional: adjust volume so overlapping isn’t too loud
-  sound.play();
-}
-const punishments = [
-  {icon: "Disabled", text: "An error occured: Website is being maintained, try again later..."}
-];
+  spinBtn.addEventListener('click', () => {
+    spinBtn.disabled = true;
+    popup.classList.remove('show');
+    
+    // Total spins — number of items * loops + random offset (here offset zero because only 1 item)
+    const loops = 20;
+    const totalScroll = itemHeight * totalItems * loops;
 
+    let start = null;
+    let duration = 4000; // 4 seconds spin
 
-    const canvas = document.getElementById('wheelCanvas');
-    const ctx = canvas.getContext('2d');
-    const spinBtn = document.getElementById('spinBtn');
-    const modalOverlay = document.getElementById('modalOverlay');
-    const modalText = document.getElementById('modalText');
-    const modalClose = document.getElementById('modalClose');
+    function easeOut(t) {
+      return t * (2 - t);
+    }
 
-    const tickSound = document.getElementById('tickSound');
-    const dingSound = document.getElementById('dingSound');
+    function animate(timestamp) {
+      if (!start) start = timestamp;
+      let elapsed = timestamp - start;
+      let progress = Math.min(elapsed / duration, 1);
+      let eased = easeOut(progress);
 
-    const size = canvas.width;
-    const center = size / 2;
-    const radius = center - 20;
-    const numSegments = punishments.length;
-    const segmentAngle = (2 * Math.PI) / numSegments;
+      // Scroll position with easing (starts fast, ends slow)
+      let scroll = totalScroll * (1 - eased);
 
-    let currentAngle = 0;
-    let spinning = false;
+      reel.style.transform = `translateY(-${scroll}px)`;
 
-    function drawWheel(angle) {
-      ctx.clearRect(0, 0, size, size);
-
-      for(let i = 0; i < numSegments; i++) {
-        const startAngle = angle + i * segmentAngle;
-        const endAngle = startAngle + segmentAngle;
-
-        // Alternate colors like Undertale's simplistic style
-        ctx.fillStyle = i % 2 === 0 ? '#111' : '#222';
-        ctx.strokeStyle = 'white';
-        ctx.lineWidth = 2;
-
-        ctx.beginPath();
-        ctx.moveTo(center, center);
-        ctx.arc(center, center, radius, startAngle, endAngle);
-        ctx.closePath();
-        ctx.fill();
-        ctx.stroke();
-
-        // Draw icon centered
-        const iconAngle = startAngle + segmentAngle / 2;
-        const iconRadius = radius - 60;
-
-        ctx.save();
-        ctx.translate(center + iconRadius * Math.cos(iconAngle), center + iconRadius * Math.sin(iconAngle));
-        ctx.rotate(iconAngle + Math.PI / 2);
-        ctx.fillStyle = "white";
-        ctx.font = 'bold 26px "Segoe UI Emoji", "Noto Color Emoji", Arial, sans-serif';
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.fillText(punishments[i].icon, 0, 0);
-        ctx.restore();
+      if (progress < 1) {
+        requestAnimationFrame(animate);
+      } else {
+        // Spin ended — show popup
+        punishmentText.textContent = reel.children[0].textContent;
+        popup.classList.add('show');
+        spinBtn.disabled = false;
       }
     }
 
-    drawWheel(currentAngle);
+    requestAnimationFrame(animate);
+  });
 
-    function easeOutQuart(t) {
-      return 1 - Math.pow(1 - t, 4);
-    }
+  closePopup.addEventListener('click', () => {
+    popup.classList.remove('show');
+  });
+</script>
 
-    let lastTickSegment = null;
-
-    function spin() {
-      if(spinning) return;
-      spinning = true;
-      spinBtn.disabled = true;
-      hideModal();
-
-      const spins = 6 + Math.random() * 3;
-      const randomIndex = Math.floor(Math.random() * numSegments);
-      const stopAngle = (2 * Math.PI * spins) + (3 * Math.PI / 2) - (randomIndex * segmentAngle + segmentAngle / 2);
-
-      const duration = 6500;
-      const startTime = performance.now();
-
-      lastTickSegment = null;
-
-      function animate(now) {
-        const elapsed = now - startTime;
-        const t = Math.min(elapsed / duration, 1);
-        const easedT = easeOutQuart(t);
-        currentAngle = stopAngle * easedT;
-
-        drawWheel(currentAngle);
-
-        // Play tick sound on every new segment passed
-        let pointerAngle = (3 * Math.PI / 2) - currentAngle;
-        pointerAngle = (pointerAngle + 2 * Math.PI) % (2 * Math.PI);
-        const currentSegment = Math.floor(pointerAngle / segmentAngle);
-
-        if(currentSegment !== lastTickSegment && t < 0.99) {
-          playSoundCloned(tickSound);
-
-          lastTickSegment = currentSegment;
-        }
-
-        if(t < 1) {
-          requestAnimationFrame(animate);
-        } else {
-          dingSound.play();
-          showModal(punishments[randomIndex].text);
-          spinning = false;
-          spinBtn.disabled = false;
-        }
-      }
-
-      requestAnimationFrame(animate);
-    }
-
-    spinBtn.addEventListener('click', spin);
-
-    function showModal(text) {
-      modalText.textContent = text;
-      modalOverlay.classList.add('active');
-    }
-
-    function hideModal() {
-      modalOverlay.classList.remove('active');
-    }
-
-    modalClose.addEventListener('click', hideModal);
-    modalOverlay.addEventListener('click', e => {
-      if(e.target === modalOverlay) hideModal();
-    });
-  </script>
 </body>
 </html>
