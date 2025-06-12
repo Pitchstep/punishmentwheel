@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Punishment Wheel</title>
+  <title>wheel of fate</title>
   <!-- Pixel font from Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
   <style>
@@ -167,14 +167,14 @@
   </style>
 </head>
 <body>
-  <h1>SETH'S PUNISHMENT WHEEL</h1>
+  <h1>seth's wheel of fate</h1>
 
   <div id="wheel">
     <canvas id="wheelCanvas" width="420" height="420"></canvas>
     <div id="pointer"></div>
   </div>
 
-  <button id="spinBtn">PRAY TO RNGESUS</button>
+  <button id="spinBtn">pray to rngesus</button>
 
   <div id="modalOverlay">
     <div id="modal">
@@ -193,28 +193,57 @@
   sound.volume = 0.3; // Optional: adjust volume so overlapping isn’t too loud
   sound.play();
 }
-    const punishments = [
-      {icon: "🔡", text: "Only type in lowercase for 5 minutes"},
-      {icon: "🔠", text: "You must type everything in ALL CAPS"},
-      {icon: "🚫😀", text: "No emojis allowed for 10 minutes"},
-      {icon: "❓", text: "Speak only in questions for 5 minutes"},
-      {icon: "🗣️", text: "Use only one-word messages for 10 minutes"},
-      {icon: "👍👎", text: "No typing except 'yes' or 'no' for 5 minutes"},
-      {icon: "💬", text: "Type with extra spaces between letters"},
-      {icon: "🎞️", text: "Reply only with GIFs for 5 minutes"},
-      {icon: "⌛", text: "No typing for 1 minute (silence challenge)"},
-      {icon: "🤐", text: "Only react with emojis for 5 minutes"},
-      {icon: "🔄", text: "Repeat last message twice every time"},
-      {icon: "💢", text: "Use at least 3 exclamation marks per message"},
-      {icon: "🧙‍♂️", text: "Talk only in rhymes for 5 minutes"},
-      {icon: "🤖", text: "Use only robot-style messages (monotone)"},
-      {icon: "👻", text: "Send only spooky messages for 10 minutes"},
-      {icon: "🎵", text: "Write messages like song lyrics"},
-      {icon: "🚶‍♂️", text: "Take 10-second breaks between messages"},
-      {icon: "🕵️‍♀️", text: "Guess what others mean in replies"},
-      {icon: "🧩", text: "Send messages as riddles or puzzles"},
-      {icon: "📢", text: "Make your messages very loud (use CAPS)"},
-    ];
+const punishments = [
+  {icon: "🖥️", text: "Use only 1337 language for 15 minutes"},
+  {icon: "🎭", text: "Type only in GIFs for 10 minutes"},
+  {icon: "😊", text: "Use only emojis for 10 minutes"},
+  {icon: "✍️", text: "Type every message backwards for 10 minutes"},
+  {icon: "🎨", text: "Change your nickname to ‘Punished One’ for 30 minutes"},
+  {icon: "💬", text: "Reply only with one-word messages for 15 minutes"},
+  {icon: "🛑", text: "Do not send any messages for 5 minutes"},
+  {icon: "🔄", text: "Repeat the last message you received every time"},
+  {icon: "🔡", text: "Type only in lowercase for 15 minutes"},
+  {icon: "🔠", text: "Type only in uppercase for 15 minutes"},
+  {icon: "🤐", text: "No typing in text channels for 10 minutes"},
+  {icon: "🤖", text: "Add ‘bot:’ at the start of every message"},
+  {icon: "📢", text: "Add ‘!’ at the end of every message"},
+  {icon: "🎵", text: "Type all messages like song lyrics"},
+  {icon: "📵", text: "No emojis for 15 minutes"},
+  {icon: "🎯", text: "Use only 5 words or less per message"},
+  {icon: "💔", text: "Change your Discord status to ‘Punished’ for 30 minutes"},
+  {icon: "🕒", text: "Wait 10 seconds before sending every message"},
+  {icon: "👻", text: "Send only spooky or Halloween-related messages"},
+  {icon: "🐸", text: "Send only memes for 10 minutes"},
+  {icon: "📚", text: "Quote a book or movie in every message"},
+  {icon: "🔤", text: "Replace every ‘e’ with ‘3’ in your messages"},
+  {icon: "🦄", text: "Add ‘✨’ emoji at the start of every message"},
+  {icon: "💀", text: "Send skull emoji in every message"},
+  {icon: "🚫", text: "No direct messages for 15 minutes"},
+  {icon: "🎮", text: "Use gaming slang only for 15 minutes"},
+  {icon: "🦹‍♂️", text: "Call everyone ‘villain’ in messages"},
+  {icon: "🥶", text: "Pretend it's freezing cold in every message"},
+  {icon: "🗣️", text: "Only type in questions for 15 minutes"},
+  {icon: "💤", text: "Pretend to be sleepy in messages"},
+  {icon: "🧩", text: "Send cryptic or riddle-like messages"},
+  {icon: "🐒", text: "Copy the last message someone sent"},
+  {icon: "🎤", text: "Rap every message"},
+  {icon: "🖋️", text: "Use only formal language"},
+  {icon: "🧙‍♂️", text: "Add a magical word in every message"},
+  {icon: "🥳", text: "Celebrate every message like it’s a party"},
+  {icon: "📣", text: "Shout every message in ALL CAPS"},
+  {icon: "🎯", text: "Send messages with exactly 10 words"},
+  {icon: "💬", text: "Use only GIFs as replies"},
+  {icon: "🛑", text: "Don’t react with emojis for 10 minutes"},
+  {icon: "💩", text: "Send poop emoji in every message"},
+  {icon: "👽", text: "Use alien language (random letters)"},
+  {icon: "🚀", text: "Pretend you’re launching a rocket in every message"},
+  {icon: "🎩", text: "Type like a magician casting spells"},
+  {icon: "🧟‍♂️", text: "Send zombie noises instead of words"},
+  {icon: "🔞", text: "Use ‘adult’ words only"},
+  {icon: "📉", text: "Pretend your connection is lagging"},
+  {icon: "🔊", text: "Send voice messages only (if possible)"},
+];
+
 
     const canvas = document.getElementById('wheelCanvas');
     const ctx = canvas.getContext('2d');
